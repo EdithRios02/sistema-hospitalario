@@ -1,4 +1,4 @@
-const pool = require('../base_datos');
+const pool = require('../base_datos/index.js');
 
 exports.crearRecordatorio = async (req, res) => {
   const { id_paciente, mensaje, fecha_envio, metodo } = req.body;

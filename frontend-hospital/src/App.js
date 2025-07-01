@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+
 import Cola from './components/cola';
 import Reservas from './components/Reservas';
 import Historial from './components/Historial';
@@ -10,13 +11,16 @@ function App() {
   return (
     <Router>
       <div>
-        <nav>
-          <Link to="/">Cola</Link> | 
-          <Link to="/reservas">Reservas</Link> | 
-          <Link to="/historial">Historial</Link> | 
-          <Link to="/recordatorios">Recordatorios</Link> | 
-          <Link to="/acciones">Acciones Médicas</Link>
+        <nav style={{ marginBottom: '20px' }}>
+          <ul style={{ display: 'flex', listStyle: 'none', gap: '1rem', padding: 0 }}>
+            <li><Link to="/">Cola</Link></li>
+            <li><Link to="/reservas">Reservas</Link></li>
+            <li><Link to="/historial">Historial</Link></li>
+            <li><Link to="/recordatorios">Recordatorios</Link></li>
+            <li><Link to="/acciones">Acciones Médicas</Link></li>
+          </ul>
         </nav>
+
         <Routes>
           <Route path="/" element={<Cola />} />
           <Route path="/reservas" element={<Reservas />} />

@@ -1,4 +1,4 @@
-const pool = require('../base_datos');
+const pool = require('../base_datos/index.js');
 
 exports.registrarAccion = async (req, res) => {
   const { id_paciente, id_doctor, tipo_accion, descripcion, fecha_accion } = req.body;

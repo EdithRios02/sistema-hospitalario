@@ -1,4 +1,4 @@
-const pool = require('../base_datos');
+const pool = require('../base_datos/index.js');
 
 exports.crearHistorial = async (req, res) => {
   const { id_paciente, diagnostico, tratamiento, observaciones } = req.body;

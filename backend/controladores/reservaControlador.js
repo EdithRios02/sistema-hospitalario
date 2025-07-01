@@ -1,4 +1,4 @@
-const pool = require('../base_datos');
+const pool = require('../base_datos/index.js');
 
 exports.crearReserva = async (req, res) => {
   const { id_paciente, id_doctor, fecha_reserva, hora_reserva, sala } = req.body;
@@ -21,3 +21,4 @@ exports.listarReservas = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+

@@ -4,11 +4,13 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 
 const app = express();
-const puerto = process.env.PORT || 3000;
+
+// Define un puerto claro y consistente
+const PORT = process.env.PORT || 3000;
 
 // Middlewares
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
 
 // Rutas API
 app.use('/api/cola', require('./rutas/colaRutas'));
@@ -17,7 +19,15 @@ app.use('/api/historial', require('./rutas/historialRutas'));
 app.use('/api/recordatorios', require('./rutas/recordatorioRutas'));
 app.use('/api/acciones', require('./rutas/accionMedicaRutas'));
 
-// Servidor activo
-app.listen(puerto, () => {
-  console.log(`✅ Servidor corriendo en: http://localhost:${puerto}`);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Ruta base opcional para ver si el servidor está vivo
+app.get('/', (req, res) => {
+  res.send('🚀 Servidor backend activo');
+});
+
+// Iniciar el servidor
+app.listen(3000, () => {
+  console.log('✅ Servidor corriendo en: http://localhost:3000');
 });
