@@ -1,25 +1,141 @@
+/* Reset básico para una apariencia uniforme */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Estilo global */
 body {
-margin: 0;
-font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-background-color: #f8fafc;
-color: #1e293b;
-line-height: 1.6;
+  font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  background-color: #f8fafc; /* gris azulado claro */
+  color: #1e293b; /* gris oscuro */
+  line-height: 1.6;
+  padding: 20px;
 }
 
+/* Códigos */
 code {
-font-family: 'Fira Code', Consolas, 'Courier New', monospace;
-background-color: #f1f5f9;
-padding: 2px 6px;
-border-radius: 4px;
-font-size: 0.95rem;
-color: #334155;
+  font-family: 'Fira Code', Consolas, 'Courier New', monospace;
+  background-color: #f1f5f9;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: #334155;
+  display: inline-block;
 }
 
+/* Enlaces */
 a {
-color: #0ea5e9;
-text-decoration: none;
+  color: #0ea5e9; /* azul brillante */
+  text-decoration: none;
+  transition: color 0.3s ease, text-decoration 0.3s ease;
 }
 
 a:hover {
-text-decoration: underline;
+  text-decoration: underline;
+  color: #0284c7; /* azul más fuerte */
+}
+
+/* Botones */
+button {
+  background-color: #0ea5e9;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  margin-top: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0284c7;
+}
+
+/* Inputs */
+input,
+select,
+textarea {
+  padding: 8px;
+  margin: 6px 4px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 1rem;
+  outline: none;
+  width: 100%;
+  max-width: 300px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #0ea5e9;
+  box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
+}
+
+/* Tablas */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #fff;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+th,
+td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+th {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+/* Contenedor general */
+.container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* Barra de navegación */
+.navbar {
+  background-color: #ffffff;
+  padding: 16px 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  border-radius: 12px;
+  margin: 20px auto;
+  max-width: 960px;
+  text-align: center;
+}
+
+.navbar-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 32px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-menu li a {
+  font-size: 1.05rem;
+  color: #0ea5e9;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  white-space: nowrap;
+}
+
+.navbar-menu li a:hover {
+  color: #0284c7;
+  text-decoration: underline;
 }
