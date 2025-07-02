@@ -51,3 +51,12 @@ exports.listarPacientes = async (req, res) => {
     res.status(500).json({ error: 'Error interno del servidor.' });
   }
 };
+
+exports.eliminarPaciente = async(req, res) =>{
+  const { id } = req.params
+
+  const {rowCount} = await pool.query('DELETE FROM paciente WHERE id = $1 RETURNING *',[id])
+  return res.status(200).json({rowCount})
+  console.log(rowCount)
+  
+}

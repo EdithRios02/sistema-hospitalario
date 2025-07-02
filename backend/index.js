@@ -13,10 +13,8 @@ app.use(express.urlencoded({ extended: true }));
 // Rutas API
 app.use('/api/cola', require('./rutas/colaRutas'));
 app.use('/api/reservas', require('./rutas/reservaRutas'));
-app.use('/api/historial', require('./rutas/historialRutas'));
-app.use('/api/recordatorios', require('./rutas/recordatorioRutas'));
-app.use('/api/acciones', require('./rutas/accionMedicaRutas'));
-app.use('/api/pacientes', require('./rutas/pacienteRutas')); // ✅ corregido aquí
+app.use('/api/pacientes', require('./rutas/pacienteRutas')); 
+app.use('/api/doctor', require('./rutas/doctorRoutes'));
 
 // Ruta de prueba del servidor
 app.get('/', (req, res) => {

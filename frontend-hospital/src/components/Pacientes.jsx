@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api';
 
 const Pacientes = () => {
   const [pacientes, setPacientes] = useState([]);
@@ -13,14 +13,13 @@ const Pacientes = () => {
     direccion: '',
   });
 
-  // Obtener pacientes al cargar el componente
   useEffect(() => {
     obtenerPacientes();
   }, []);
 
   const obtenerPacientes = async () => {
     try {
-      const res = await axios.get('http://localhost:3000/pacientes');
+      const res = await api.get('/pacientes');
       setPacientes(res.data);
     } catch (error) {
       console.error('Error al obtener pacientes:', error);
@@ -37,8 +36,8 @@ const Pacientes = () => {
   const manejarEnvio = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:3000/pacientes', formulario);
-      obtenerPacientes(); // Actualiza la lista
+      await api.post('/pacientes', formulario);
+      obtenerPacientes();
       setFormulario({
         nombre: '',
         apellido: '',
@@ -50,6 +49,16 @@ const Pacientes = () => {
       });
     } catch (error) {
       console.error('Error al crear paciente:', error);
+    }
+  };
+
+  const eliminarPaciente = async (id) => {
+    if (!window.confirm('¿Estás seguro de que deseas eliminar este paciente?')) return;
+    try {
+      await api.delete(`/pacientes/${id}`);
+      obtenerPacientes();
+    } catch (error) {
+      console.error('Error al eliminar paciente:', error);
     }
   };
 
@@ -80,6 +89,7 @@ const Pacientes = () => {
             <th>Email</th>
             <th>Dirección</th>
             <th>Fecha Registro</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -93,6 +103,11 @@ const Pacientes = () => {
               <td>{paciente.email}</td>
               <td>{paciente.direccion}</td>
               <td>{new Date(paciente.creado_en).toLocaleString()}</td>
+              <td>
+                <button onClick={() => eliminarPaciente(paciente.id)} style={{ color: 'red' }}>
+                  Eliminar
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

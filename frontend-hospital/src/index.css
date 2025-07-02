@@ -1,20 +1,29 @@
-/* Reset básico para una apariencia uniforme */
+/* =================================
+   RESET Y CONFIGURACIÓN BASE
+   ================================= */
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
-/* Estilo global */
+/* =================================
+   ESTILOS GLOBALES
+   ================================= */
+
 body {
   font-family: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  background-color: #f8fafc; /* gris azulado claro */
-  color: #1e293b; /* gris oscuro */
+  background-color: #f8fafc;
+  color: #1e293b;
   line-height: 1.6;
   padding: 20px;
 }
 
-/* Códigos */
+/* =================================
+   TIPOGRAFÍA Y CÓDIGO
+   ================================= */
+
 code {
   font-family: 'Fira Code', Consolas, 'Courier New', monospace;
   background-color: #f1f5f9;
@@ -25,47 +34,62 @@ code {
   display: inline-block;
 }
 
-/* Enlaces */
+/* =================================
+   ENLACES
+   ================================= */
+
 a {
-  color: #0ea5e9; /* azul brillante */
+  color: #0ea5e9;
   text-decoration: none;
   transition: color 0.3s ease, text-decoration 0.3s ease;
 }
 
 a:hover {
+  color: #0284c7;
   text-decoration: underline;
-  color: #0284c7; /* azul más fuerte */
 }
+
+/* =================================
+   FORMULARIOS
+   ================================= */
 
 /* Botones */
 button {
   background-color: #0ea5e9;
-  color: #fff;
+  color: #ffffff;
   border: none;
   padding: 8px 16px;
   margin-top: 10px;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
-  transition: background-color 0.3s ease;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 button:hover {
   background-color: #0284c7;
+  transform: translateY(-1px);
 }
 
-/* Inputs */
+button:active {
+  transform: translateY(0);
+}
+
+/* Campos de entrada */
 input,
 select,
 textarea {
-  padding: 8px;
+  padding: 8px 12px;
   margin: 6px 4px;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
   font-size: 1rem;
+  font-family: inherit;
   outline: none;
   width: 100%;
   max-width: 300px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 input:focus,
@@ -75,40 +99,209 @@ textarea:focus {
   box-shadow: 0 0 0 2px rgba(14, 165, 233, 0.2);
 }
 
-/* Tablas */
+/* =================================
+   TABLAS
+   ================================= */
+
 table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
-  background-color: #fff;
-  border-radius: 6px;
+  margin: 20px 0;
+  background-color: #ffffff;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
 }
 
-th,
-td {
-  padding: 12px;
-  text-align: left;
-  border-bottom: 1px solid #e2e8f0;
-}
-
+/* Encabezados de tabla */
 th {
-  background-color: #f1f5f9;
-  color: #475569;
+  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  color: #ffffff;
+  padding: 16px 20px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.075em;
+  border-bottom: 2px solid #0369a1;
+  position: relative;
+  white-space: nowrap;
 }
 
-/* Contenedor general */
+th::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.3) 50%, transparent 100%);
+}
+
+/* Celdas de datos */
+td {
+  padding: 14px 20px;
+  text-align: left;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+/* Filas alternadas */
+tbody tr:nth-child(even) {
+  background-color: #f8fafc;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+/* Efectos hover en filas */
+tbody tr {
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+tbody tr:hover {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(14, 165, 233, 0.15);
+}
+
+tbody tr:hover td {
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+/* Última fila sin borde inferior */
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Estilos para tablas con datos numéricos */
+.table-numeric td:nth-child(n+2) {
+  text-align: right;
+  font-family: 'SF Mono', 'Monaco', 'Cascadia Code', 'Roboto Mono', Consolas, monospace;
+  font-weight: 500;
+}
+
+/* Tablas compactas */
+.table-compact th,
+.table-compact td {
+  padding: 10px 14px;
+  font-size: 0.9rem;
+}
+
+/* Tablas con bordes */
+.table-bordered {
+  border: 2px solid #e2e8f0;
+}
+
+.table-bordered th,
+.table-bordered td {
+  border-right: 1px solid #e2e8f0;
+}
+
+.table-bordered th:last-child,
+.table-bordered td:last-child {
+  border-right: none;
+}
+
+/* Indicador de ordenamiento */
+.sortable th {
+  cursor: pointer;
+  position: relative;
+  user-select: none;
+}
+
+.sortable th:hover {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+}
+
+.sortable th::after {
+  content: '↕';
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+.sortable th.sort-asc::after {
+  content: '↑';
+  opacity: 1;
+}
+
+.sortable th.sort-desc::after {
+  content: '↓';
+  opacity: 1;
+}
+
+/* Estados especiales para celdas */
+.cell-success {
+  background-color: #dcfce7 !important;
+  color: #166534;
+  font-weight: 600;
+}
+
+.cell-warning {
+  background-color: #fef3c7 !important;
+  color: #92400e;
+  font-weight: 600;
+}
+
+.cell-error {
+  background-color: #fee2e2 !important;
+  color: #991b1b;
+  font-weight: 600;
+}
+
+/* Tabla responsive */
+.table-responsive {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-responsive::-webkit-scrollbar {
+  height: 6px;
+}
+
+.table-responsive::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.table-responsive::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* =================================
+   LAYOUT Y CONTENEDORES
+   ================================= */
+
 .container {
   max-width: 960px;
   margin: 0 auto;
+  padding: 0 20px;
 }
 
-/* Barra de navegación */
+/* =================================
+   NAVEGACIÓN
+   ================================= */
+
 .navbar {
   background-color: #ffffff;
   padding: 16px 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   border-radius: 12px;
   margin: 20px auto;
   max-width: 960px;
@@ -131,11 +324,54 @@ th {
   color: #0ea5e9;
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.3s ease;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: all 0.3s ease;
   white-space: nowrap;
 }
 
 .navbar-menu li a:hover {
   color: #0284c7;
-  text-decoration: underline;
+  background-color: #f0f9ff;
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+/* =================================
+   RESPONSIVE DESIGN
+   ================================= */
+
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+  
+  .navbar {
+    padding: 12px 16px;
+    margin: 10px auto;
+  }
+  
+  .navbar-menu {
+    gap: 16px;
+  }
+  
+  .navbar-menu li a {
+    font-size: 1rem;
+    padding: 6px 12px;
+  }
+  
+  input,
+  select,
+  textarea {
+    max-width: 100%;
+  }
+  
+  table {
+    font-size: 0.9rem;
+  }
+  
+  th,
+  td {
+    padding: 8px 12px;
+  }
 }
