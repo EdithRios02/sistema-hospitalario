@@ -64,13 +64,13 @@ function Reservas() {
           onChange={(e) => setFormData({ ...formData, id_doctor: e.target.value })}
         />
         <input
-        type="date"
+          type="date"
           placeholder="Fecha"
           value={formData.fecha_reserva}
           onChange={(e) => setFormData({ ...formData, fecha_reserva: e.target.value })}
         />
         <input
-        type="time"
+          type="time"
           placeholder="Hora"
           value={formData.hora_reserva}
           onChange={(e) => setFormData({ ...formData, hora_reserva: e.target.value })}
@@ -83,17 +83,38 @@ function Reservas() {
         <button type="submit">Reservar</button>
       </form>
 
-      <ul>
-        {reservas.length === 0 ? (
-          <li>No hay reservas registradas.</li>
-        ) : (
-          reservas.map((r) => (
-            <li key={r.id}>
-              {r.fecha_reserva} - {r.hora_reserva} - Sala {r.sala}
-            </li>
-          ))
-        )}
-      </ul>
+      <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+        <thead>
+          <tr style={{ backgroundColor: '#f5f5f5' }}>
+            <th style={{ border: '1px solid #ddd', padding: '8px' }}>ID</th>
+            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Paciente</th>
+            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Doctor</th>
+            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Fecha</th>
+            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Hora</th>
+            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Sala</th>
+          </tr>
+        </thead>
+        <tbody>
+          {reservas.length === 0 ? (
+            <tr>
+              <td colSpan="6" style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'center' }}>
+                No hay reservas registradas.
+              </td>
+            </tr>
+          ) : (
+            reservas.map((r) => (
+              <tr key={r.id}>
+                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{r.id}</td>
+                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{r.id_paciente}</td>
+                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{r.id_doctor}</td>
+                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{r.fecha_reserva}</td>
+                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{r.hora_reserva}</td>
+                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{r.sala}</td>
+              </tr>
+            ))
+          )}
+        </tbody>
+      </table>
     </div>
   );
 }

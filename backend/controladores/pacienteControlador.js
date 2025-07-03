@@ -60,3 +60,4 @@ exports.eliminarPaciente = async(req, res) =>{
   console.log(rowCount)
   
 }
+

@@ -12,15 +12,15 @@ function App() {
       <div>
         <nav className="navbar">
           <ul className="navbar-menu">
-            <li><Link to="/">Cola</Link></li>
-            <li><Link to="/reservas">Reservas</Link></li>
             <li><Link to="/pacientes">Paciente</Link></li>
             <li><Link to="/doctor">Doctor</Link></li>
+            <li><Link to="/cola">Cola</Link></li>
+            <li><Link to="/reservas">Reservas</Link></li>
           </ul>
         </nav>
 
         <Routes>
-          <Route path="/" element={<Cola />} />
+          <Route path="/cola" element={<Cola />} />
           <Route path="/reservas" element={<Reservas />} />
           <Route path="/pacientes" element={<Pacientes />} />
           <Route path="/doctor" element={<Doctor />} />
