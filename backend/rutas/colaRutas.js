@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-// Ruta para recibir turnos
 router.post('/', (req, res) => {
   const turnos = req.body;
   console.log('Turnos recibidos:', turnos);

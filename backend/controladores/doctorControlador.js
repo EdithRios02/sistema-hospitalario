@@ -6,7 +6,7 @@ exports.obtenerDoctores = async (req, res) => {
     const resultado = await pool.query('SELECT * FROM doctor ORDER BY id');
     res.json(resultado.rows);
   } catch (error) {
-    console.error('❌ Error al obtener doctores:', error);
+    console.error(' Error al obtener doctores:', error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -26,7 +26,7 @@ exports.crearDoctor = async (req, res) => {
     );
     res.status(201).json(resultado.rows[0]);
   } catch (error) {
-    console.error('❌ Error al crear doctor:', error);
+    console.error(' Error al crear doctor:', error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -41,7 +41,49 @@ exports.eliminarDoctor = async (req, res) => {
     }
     res.json({ mensaje: 'Doctor eliminado correctamente', doctor: resultado.rows[0] });
   } catch (error) {
-    console.error('❌ Error al eliminar doctor:', error);
+    console.error(' Error al eliminar doctor:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.editarDoctor = async (req, res) => {
+  const { id } = req.params;
+  const { nombre, apellido, especialidad, telefono, email } = req.body;
+  
+  try {
+    const resultado = await pool.query(
+      'UPDATE doctor SET nombre = $1, apellido = $2, especialidad = $3, telefono = $4, email = $5 WHERE id = $6 RETURNING *',
+      [nombre, apellido, especialidad, telefono, email, id]
+    );
+    
+    if (resultado.rows.length === 0) {
+      return res.status(404).json({ error: 'Doctor no encontrado' });
+    }
+    
+    res.json({ mensaje: 'Doctor actualizado correctamente', doctor: resultado.rows[0] });
+  } catch (error) {
+    console.error('Error al editar doctor:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.editarDoctor = async (req, res) => {
+  const { id } = req.params;
+  const { nombre, apellido, especialidad, telefono, email } = req.body;
+  
+  try {
+    const resultado = await pool.query(
+      'UPDATE doctor SET nombre = $1, apellido = $2, especialidad = $3, telefono = $4, email = $5 WHERE id = $6 RETURNING *',
+      [nombre, apellido, especialidad, telefono, email, id]
+    );
+    
+    if (resultado.rows.length === 0) {
+      return res.status(404).json({ error: 'Doctor no encontrado' });
+    }
+    
+    res.json({ mensaje: 'Doctor actualizado correctamente', doctor: resultado.rows[0] });
+  } catch (error) {
+    console.error('Error al editar doctor:', error);
     res.status(500).json({ error: error.message });
   }
 };

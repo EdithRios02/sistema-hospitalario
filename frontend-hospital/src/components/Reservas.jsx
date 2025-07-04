@@ -18,7 +18,7 @@ function Reservas() {
       setReservas(res.data);
       setError(null);
     } catch (err) {
-      console.error('❌ Error al obtener reservas:', err);
+      console.error('Error al obtener reservas:', err);
       setError('No se pudo cargar la lista de reservas.');
     }
   };
@@ -27,11 +27,52 @@ function Reservas() {
     obtenerReservas();
   }, []);
 
+  // Validaciones en tiempo real
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    // Validar solo números en campos específicos
+    if (['id_paciente', 'id_doctor', 'sala'].includes(name)) {
+      if (!/^\d*$/.test(value)) return; // solo números permitidos
+    }
+
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const validarFormulario = () => {
+    const soloNumeros = /^[0-9]+$/;
+
+    if (!soloNumeros.test(formData.id_paciente)) {
+      setError('El ID del paciente debe contener solo números.');
+      return false;
+    }
+
+    if (!soloNumeros.test(formData.id_doctor)) {
+      setError('El ID del doctor debe contener solo números.');
+      return false;
+    }
+
+    if (formData.sala && !soloNumeros.test(formData.sala)) {
+      setError('La sala debe contener solo números.');
+      return false;
+    }
+
+    if (!formData.fecha_reserva || !formData.hora_reserva) {
+      setError('La fecha y la hora son obligatorias.');
+      return false;
+    }
+
+    return true;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validarFormulario()) return;
+
     try {
       await api.post('/reservas', formData);
-      obtenerReservas(); // actualiza lista
+      obtenerReservas();
       setFormData({
         id_paciente: '',
         id_doctor: '',
@@ -41,8 +82,19 @@ function Reservas() {
       });
       setError(null);
     } catch (err) {
-      console.error('❌ Error al crear reserva:', err);
+      console.error('Error al crear reserva:', err);
       setError('Error al crear la reserva. Verifica los datos.');
+    }
+  };
+
+  const eliminarReserva = async (id) => {
+    if (!window.confirm('¿Estás seguro de eliminar esta reserva?')) return;
+    try {
+      await api.delete(`/reservas/${id}`);
+      obtenerReservas();
+    } catch (err) {
+      console.error('Error al eliminar reserva:', err);
+      setError('Error al eliminar la reserva.');
     }
   };
 
@@ -54,31 +106,36 @@ function Reservas() {
 
       <form onSubmit={handleSubmit}>
         <input
+          name="id_paciente"
           placeholder="ID Paciente"
           value={formData.id_paciente}
-          onChange={(e) => setFormData({ ...formData, id_paciente: e.target.value })}
+          onChange={handleChange}
         />
         <input
+          name="id_doctor"
           placeholder="ID Doctor"
           value={formData.id_doctor}
-          onChange={(e) => setFormData({ ...formData, id_doctor: e.target.value })}
+          onChange={handleChange}
         />
         <input
           type="date"
+          name="fecha_reserva"
           placeholder="Fecha"
           value={formData.fecha_reserva}
-          onChange={(e) => setFormData({ ...formData, fecha_reserva: e.target.value })}
+          onChange={handleChange}
         />
         <input
           type="time"
+          name="hora_reserva"
           placeholder="Hora"
           value={formData.hora_reserva}
-          onChange={(e) => setFormData({ ...formData, hora_reserva: e.target.value })}
+          onChange={handleChange}
         />
         <input
+          name="sala"
           placeholder="Sala"
           value={formData.sala}
-          onChange={(e) => setFormData({ ...formData, sala: e.target.value })}
+          onChange={handleChange}
         />
         <button type="submit">Reservar</button>
       </form>
@@ -92,12 +149,13 @@ function Reservas() {
             <th style={{ border: '1px solid #ddd', padding: '8px' }}>Fecha</th>
             <th style={{ border: '1px solid #ddd', padding: '8px' }}>Hora</th>
             <th style={{ border: '1px solid #ddd', padding: '8px' }}>Sala</th>
+            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {reservas.length === 0 ? (
             <tr>
-              <td colSpan="6" style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'center' }}>
+              <td colSpan="7" style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'center' }}>
                 No hay reservas registradas.
               </td>
             </tr>
@@ -110,6 +168,11 @@ function Reservas() {
                 <td style={{ border: '1px solid #ddd', padding: '8px' }}>{r.fecha_reserva}</td>
                 <td style={{ border: '1px solid #ddd', padding: '8px' }}>{r.hora_reserva}</td>
                 <td style={{ border: '1px solid #ddd', padding: '8px' }}>{r.sala}</td>
+                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
+                  <button onClick={() => eliminarReserva(r.id)} style={{ color: 'red' }}>
+                    Eliminar
+                  </button>
+                </td>
               </tr>
             ))
           )}

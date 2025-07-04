@@ -1,5 +1,6 @@
 const pool = require('../base_datos/index.js');
 
+// Crear nueva reserva
 exports.crearReserva = async (req, res) => {
   const { id_paciente, id_doctor, fecha_reserva, hora_reserva, sala } = req.body;
   try {
@@ -13,6 +14,7 @@ exports.crearReserva = async (req, res) => {
   }
 };
 
+// Listar todas las reservas
 exports.listarReservas = async (req, res) => {
   try {
     const resultado = await pool.query('SELECT * FROM reserva ORDER BY fecha_reserva, hora_reserva');
@@ -22,3 +24,16 @@ exports.listarReservas = async (req, res) => {
   }
 };
 
+// Eliminar reserva por ID
+exports.eliminarReserva = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const resultado = await pool.query('DELETE FROM reserva WHERE id = $1 RETURNING *', [id]);
+    if (resultado.rowCount === 0) {
+      return res.status(404).json({ error: 'Reserva no encontrada' });
+    }
+    res.status(200).json({ mensaje: 'Reserva eliminada correctamente', reservaEliminada: resultado.rows[0] });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};

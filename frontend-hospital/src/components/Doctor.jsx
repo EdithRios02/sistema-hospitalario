@@ -10,6 +10,8 @@ const Doctor = () => {
     telefono: '',
     email: '',
   });
+  const [editando, setEditando] = useState(false);
+  const [doctorEditando, setDoctorEditando] = useState(null);
 
   useEffect(() => {
     obtenerDoctores();
@@ -21,42 +23,108 @@ const Doctor = () => {
       setDoctores(res.data);
     } catch (error) {
       console.error('Error al obtener doctores:', error);
-      alert('Error al cargar doctores. Verifica el servidor.');
+      alert('Error al cargar doctores.');
     }
   };
 
   const manejarCambio = (e) => {
-    setFormulario({
-      ...formulario,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    // Validaciones en tiempo real:
+    if (
+      (name === 'nombre' || name === 'apellido' || name === 'especialidad') &&
+      /[^a-zA-Z\s]/.test(value)
+    ) return;
+
+    if (name === 'telefono' && /[^0-9]/.test(value)) return;
+
+    setFormulario({ ...formulario, [name]: value });
+  };
+
+  const validarFormulario = () => {
+    const soloLetras = /^[a-zA-Z\s]+$/;
+    const soloNumeros = /^[0-9]+$/;
+    const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!soloLetras.test(formulario.nombre)) {
+      alert('El nombre solo debe contener letras.');
+      return false;
+    }
+
+    if (!soloLetras.test(formulario.apellido)) {
+      alert('El apellido solo debe contener letras.');
+      return false;
+    }
+
+    if (formulario.especialidad && !soloLetras.test(formulario.especialidad)) {
+      alert('La especialidad solo debe contener letras.');
+      return false;
+    }
+
+    if (formulario.telefono && !soloNumeros.test(formulario.telefono)) {
+      alert('El teléfono solo debe contener números.');
+      return false;
+    }
+
+    if (!emailValido.test(formulario.email)) {
+      alert('El email no es válido.');
+      return false;
+    }
+
+    return true;
   };
 
   const manejarEnvio = async (e) => {
     e.preventDefault();
+
     if (!formulario.nombre || !formulario.apellido || !formulario.email) {
       alert('Nombre, apellido y email son obligatorios');
       return;
     }
 
+    if (!validarFormulario()) return;
+
     try {
-      await api.post('/doctor', formulario);
+      if (editando) {
+        await api.put(`/doctor/${doctorEditando.id}`, formulario);
+        setEditando(false);
+        setDoctorEditando(null);
+      } else {
+        await api.post('/doctor', formulario);
+      }
+
+      limpiarFormulario();
       obtenerDoctores();
-      setFormulario({
-        nombre: '',
-        apellido: '',
-        especialidad: '',
-        telefono: '',
-        email: '',
-      });
     } catch (error) {
-      console.error('Error al registrar doctor:', error);
-      alert('Error al registrar doctor. Revisa la consola.');
+      console.error('Error al guardar doctor:', error);
+      alert('Error al guardar doctor.');
     }
   };
 
+  const limpiarFormulario = () => {
+    setFormulario({
+      nombre: '',
+      apellido: '',
+      especialidad: '',
+      telefono: '',
+      email: '',
+    });
+  };
+
+  const iniciarEdicion = (doctor) => {
+    setEditando(true);
+    setDoctorEditando(doctor);
+    setFormulario({
+      nombre: doctor.nombre,
+      apellido: doctor.apellido,
+      especialidad: doctor.especialidad || '',
+      telefono: doctor.telefono || '',
+      email: doctor.email,
+    });
+  };
+
   const eliminarDoctor = async (id) => {
-    if (!window.confirm('¿Estás seguro de que deseas eliminar este doctor?')) return;
+    if (!window.confirm('¿Eliminar este doctor?')) return;
     try {
       await api.delete(`/doctor/${id}`);
       obtenerDoctores();
@@ -67,93 +135,61 @@ const Doctor = () => {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>Registrar Doctor</h2>
+    <div>
+      {/* Estilos mínimos para bordes de tabla */}
+      <style>
+        {`
+          table, th, td {
+            border: 1px solid #ddd;
+            border-collapse: collapse;
+            padding: 8px;
+          }
+        `}
+      </style>
 
-      <form onSubmit={manejarEnvio} style={{ marginBottom: '30px' }}>
-        <input 
-          type="text" 
-          name="nombre" 
-          placeholder="Nombre" 
-          value={formulario.nombre} 
-          onChange={manejarCambio} 
-          required 
-        />
-        <input 
-          type="text" 
-          name="apellido" 
-          placeholder="Apellido" 
-          value={formulario.apellido} 
-          onChange={manejarCambio} 
-          required 
-        />
-        <input 
-          type="text" 
-          name="especialidad" 
-          placeholder="Especialidad" 
-          value={formulario.especialidad} 
-          onChange={manejarCambio} 
-        />
-        <input 
-          type="text" 
-          name="telefono" 
-          placeholder="Teléfono" 
-          value={formulario.telefono} 
-          onChange={manejarCambio} 
-        />
-        <input 
-          type="email" 
-          name="email" 
-          placeholder="Email" 
-          value={formulario.email} 
-          onChange={manejarCambio} 
-          required 
-        />
-        <button type="submit">Guardar</button>
+      <h2>{editando ? 'Editar Doctor' : 'Registrar Doctor'}</h2>
+
+      <form onSubmit={manejarEnvio}>
+        <input name="nombre" value={formulario.nombre} onChange={manejarCambio} placeholder="Nombre" />
+        <input name="apellido" value={formulario.apellido} onChange={manejarCambio} placeholder="Apellido" />
+        <input name="especialidad" value={formulario.especialidad} onChange={manejarCambio} placeholder="Especialidad" />
+        <input name="telefono" value={formulario.telefono} onChange={manejarCambio} placeholder="Teléfono" />
+        <input name="email" value={formulario.email} onChange={manejarCambio} placeholder="Email" />
+        <button type="submit">{editando ? 'Actualizar' : 'Guardar'}</button>
+        {editando && <button onClick={limpiarFormulario} type="button">Cancelar</button>}
       </form>
 
       <h3>Lista de Doctores</h3>
-      <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '20px' }}>
+
+      <table>
         <thead>
-          <tr style={{ backgroundColor: '#f5f5f5' }}>
-            <th style={{ border: '1px solid #ddd', padding: '8px' }}>ID</th>
-            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Nombre</th>
-            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Apellido</th>
-            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Especialidad</th>
-            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Teléfono</th>
-            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Email</th>
-            <th style={{ border: '1px solid #ddd', padding: '8px' }}>Acciones</th>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Especialidad</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {doctores.length === 0 ? (
             <tr>
-              <td colSpan="7" style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'center' }}>
-                No hay doctores registrados.
-              </td>
+              <td colSpan="7">No hay doctores registrados.</td>
             </tr>
           ) : (
             doctores.map((doctor) => (
               <tr key={doctor.id}>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{doctor.id}</td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{doctor.nombre}</td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{doctor.apellido}</td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{doctor.especialidad}</td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{doctor.telefono}</td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{doctor.email}</td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                  <button 
-                    onClick={() => eliminarDoctor(doctor.id)}
-                    style={{ 
-                      backgroundColor: '#ff4444', 
-                      color: 'white', 
-                      border: 'none', 
-                      padding: '5px 10px', 
-                      cursor: 'pointer' 
-                    }}
-                  >
-                    Eliminar
-                  </button>
+                <td>{doctor.id}</td>
+                <td>{doctor.nombre}</td>
+                <td>{doctor.apellido}</td>
+                <td>{doctor.especialidad}</td>
+                <td>{doctor.telefono}</td>
+                <td>{doctor.email}</td>
+                <td>
+                  <button onClick={() => iniciarEdicion(doctor)}>Editar</button>
+                  <button onClick={() => eliminarDoctor(doctor.id)}>Eliminar</button>
                 </td>
               </tr>
             ))
